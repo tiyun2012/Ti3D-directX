@@ -1,0 +1,61 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "initialize",
+            "type": "shell",
+            "command": "echo ---------------------initialize--------------------",
+            "problemMatcher": []
+        },
+        {
+            "label": "Create_Output_Directory",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command", "if (!(Test-Path -Path '${workspaceFolder}/bin')) { New-Item -ItemType Directory -Path '${workspaceFolder}/bin' };if (!(Test-Path -Path '${workspaceFolder}/bin/build.log')) { New-Item -ItemType File -Path '${workspaceFolder}/bin/build.log' }else { Clear-Content '${workspaceFolder}/bin/build.log'}"],
+            "problemMatcher": []
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                " C:/msys64/mingw64/bin/g++.exe",
+                "${workspaceFolder}/src/main.cpp",
+                "${workspaceFolder}/ThirdParty/gladLib/src/glad.c",
+                "${workspaceFolder}/ThirdParty/imgui/imgui.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/imgui_demo.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/imgui_draw.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/imgui_tables.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/imgui_widgets.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/backends/imgui_impl_dx12.cpp",
+                "${workspaceFolder}/ThirdParty/imgui/backends/imgui_impl_win32.cpp",
+                "-I", "${workspaceFolder}/thirdParty/imgui",
+                "-I", "${workspaceFolder}/thirdParty/backends",
+                "-o", "${workspaceFolder}/bin/Ti3d.exe",
+                "-std=c++17",
+                "-lglfw3",
+                "-lopengl32",
+                "-lgdi32",
+                "-luser32",
+                "*>&1", 
+                "| Out-File '${workspaceFolder}/bin/build.log' -Append"
+            ],
+            "problemMatcher": ["$gcc"],
+            "dependsOn": [
+                "initialize",
+                "Create_Output_Directory"
+            ],
+            "options": 
+                    {"cwd": "${workspaceFolder}"
+                    },    
+            "group": 
+                    {
+                        "kind": "build",
+                        "isDefault": true
+                    },
+            "dependsOrder": "sequence"
+        }
+    ]
+}
